@@ -143,31 +143,28 @@ function getBook(id) {
   return data.find((d) => d.id === id);
 }
 
-
 // Destructuring with Objects.
 
-const book = getBook(2);
+const book = getBook(1);
 
-book
+book;
 const bookTitle = book.title;
 const bookAuthor = book.author;
 
-console.log(bookTitle, bookAuthor)
-
+console.log(bookTitle, bookAuthor);
 
 const { title, author, publicationDate, genres, pages } = getBook(2);
 console.log(title, author);
 
-const { name } = getBook(2)
-console.log(name)
+const { name } = getBook(2);
+console.log(name);
 
-const { title: bookName } = getBook(2)
-console.log(bookName)
-
+const { title: bookName } = getBook(2);
+console.log(bookName);
 
 // Destructuring with Arrays.
 
-console.log(genres)
+console.log(genres);
 
 const mainGenre = genres[0];
 const secondaryGenre = genres[1];
@@ -175,3 +172,39 @@ console.log(mainGenre, secondaryGenre);
 
 const [firstGenre, secondGenre] = genres;
 console.log(firstGenre, secondGenre);
+
+// Rest operator with Arrays
+/**
+ * You can only place the rest operator at the end of the element.
+ */
+
+const [primaryGenre, ...otherGenres] = genres;
+console.log(primaryGenre, otherGenres);
+
+// Spread operator with Arrays
+/**
+ * You can place the spread operator in any position of the array.
+ */
+let newGenres = [genres, "epic fantasy"];
+console.log(newGenres);
+
+newGenres = [...genres, "epic fantasy"];
+console.log(newGenres);
+
+newGenres = ["thriller", ...genres];
+console.log(newGenres);
+
+newGenres = ["thriller", ...genres, "epic fantasy"];
+console.log(newGenres);
+
+// Spread operator with Objects
+
+let updatedBook = { book, moviePublicationDate: "2001-12-19" };
+updatedBook;
+
+updatedBook = { ...book, moviePublicationDate: "2001-12-19", pages: 1210 };
+updatedBook;
+
+updatedBook["pages"] = 1333;
+updatedBook["publisher"] = "Allendale";
+updatedBook;
