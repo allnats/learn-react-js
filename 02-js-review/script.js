@@ -208,3 +208,11 @@ updatedBook;
 updatedBook["pages"] = 1333;
 updatedBook["publisher"] = "Allendale";
 updatedBook;
+
+// Template Literal
+const summary = `${title} is a book`;
+summary;
+
+// Ternary Operator.
+const pagesRange = pages > 1000 ? "over a thousand" : "less than 1000";
+console.log(pagesRange);
