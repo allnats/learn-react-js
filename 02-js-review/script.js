@@ -216,3 +216,15 @@ summary;
 // Ternary Operator.
 const pagesRange = pages > 1000 ? "over a thousand" : "less than 1000";
 console.log(pagesRange);
+
+// Optional chaining and Nullish Coalescing.
+let getTotalReviewCount = (book) => {
+  const goodreadTotal = book.reviews.goodreads?.reviewsCount;
+  const librarythingTotal = book.reviews.librarything?.reviewsCount ?? 0;
+
+  const totalReviews = goodreadTotal + librarythingTotal;
+  return totalReviews;
+};
+
+console.log(getTotalReviewCount(getBook(3)));
+console.log(book["reviews"]["librarything"]["reviewsCount"]);
