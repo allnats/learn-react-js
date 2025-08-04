@@ -1,22 +1,52 @@
 import { useState } from "react";
 
 export default function Game() {
+  const [xIsNext, setXIsNext] = useState(true);
+  const [history, setHistory] = useState([Array(9).fill(null)]);
+  const [currentMove, setCurrentMove] = useState(0);
+  const currentSquares = history[currentMove];
+
+function handlePlay(nextSquares) {
+  const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+  setHistory(nextHistory);
+  setCurrentMove(nextHistory.length - 1);
+  setXIsNext(!xIsNext);
+}
+
+  function jumpTo(nextMove) {
+    setCurrentMove(nextMove);
+    setXIsNext(nextMove % 2 === 0);
+  }
+
+  const moves = history.map((squares, move) => {
+    let desc;
+    if (move > 0) {
+      desc = `Go to move # ${move}`
+    } else {
+      desc = `Go to game start`;
+    }
+
+    return (
+      <li key={move}>
+        <button onClick={() => jumpTo(move)}>{desc}</button>
+      </li>
+    )
+  })
+
   return (
   <div className="game">
     <div className="game-board">
-      <Board />
+      <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay}/>
     </div>
     <div className="game-info">
-      <ol>{/*TODO*/}</ol>
+      <ol>{moves}</ol>
     </div>
   </div>
   );
 }
 
 
-export function Board() {
-  const [xIsNext, setXisNext] = useState(true);
-  const [squares, setSquares] = useState(Array(9).fill(null));
+export function Board({xIsNext, squares, onPlay}) {
 
   function nextTurn() {
     setXisNext(!xIsNext)
@@ -29,8 +59,7 @@ export function Board() {
 
     const nextSquares = squares.slice()
     nextSquares[i] = xIsNext ? "X" : "O";
-    setSquares(nextSquares)
-    nextTurn()
+    onPlay(nextSquares)
   }
 
   const winner = calculateWinner(squares);
