@@ -4,39 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hello React!</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   </head>
   <body>
     <div id="root"></div>
-    <!-- This is the core React Library. -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <!-- This is the rendering layer of React. -->
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-
     <script>
       const App = () => {
-        /**
-         * The createElement method creates an element but doesn't render it.
-         * It accepts three arguments: element's name, props, and
-         * its children (or content)
-         *
-         **/
+        const currentTime = new Date().toLocaleTimeString();
 
-        //  Core JS (web) object)
-        // const time = new Date().toLocaleTimeString();
-
-        // Playing with states in React
-        const [time, setTime] = React.useState(new Date().toLocaleTimeString());
+        const [time, setTime] = React.useState(currentTime);
 
         React.useEffect(() => {
-          setInterval(() => {
-            setTime(new Date().toLocaleTimeString());
-          }, 1000);
-        }, []);
+          setInterval(() => setTime(new Date().toLocaleTimeString()), 1000);
+        });
 
         return React.createElement(
           "header",
-          null,
-          `Hello React! The time is now ${time}`
+          undefined,
+          `The time is now ${time}`
         );
       };
 
