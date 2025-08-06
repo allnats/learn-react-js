@@ -1,29 +1,49 @@
-import { StrictMode } from "react"
-import { createRoot } from "react-dom/client"
-import { pizzaData } from "./data.js"
+import { StrictMode, createElement } from "react";
+import { createRoot } from "react-dom/client";
+import { pizzaData } from "./data.js";
 
-
-const [focaccia] = pizzaData
+const [focaccia] = pizzaData;
 
 function App() {
   return (
     <>
-      <h1>Hello React!</h1>
-      <Pizza />
-      <Pizza />
-      <Pizza />
+      <Header />
+      <Menu />
+      <Footer />
     </>
-  )
+  );
 }
 
 function Pizza() {
   return (
     <>
-    <img src="pizzas/focaccia.jpg" alt="Pizza Spinaci"></img>
-    <h2>Pizza: {focaccia.name}</h2>
-    <p>{focaccia.ingredients}</p>
+      <img src="pizzas/focaccia.jpg" alt="Pizza Spinaci"></img>
+      <h2>Pizza: {focaccia.name}</h2>
+      <p>{focaccia.ingredients}</p>
     </>
-  )
+  );
+}
+
+function Header() {
+  return <h1>Fast React Pizza Co.</h1>;
+}
+
+function Menu() {
+  return (
+    <div>
+      <h2>Our menu</h2>
+      <Pizza />
+      <Pizza />
+      <Pizza />
+    </div>
+  );
+}
+
+function Footer() {
+  // return createElement("footer", null, "We are open till 8PM!")
+  return (
+    <footer>{new Date().toLocaleTimeString()}. We're currently open</footer>
+  );
 }
 
 // React v18
