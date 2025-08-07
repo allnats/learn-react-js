@@ -28,29 +28,32 @@ function Intro() {
 
 function SkillList() {
   const skillList = [
-    { name: "HTML", emoji: "🛡️", color: "#ffa94d" },
-    { name: "CSS", emoji: "🪻", color: "#e25df4ff" },
-    { name: "JavaScript", emoji: "💻️", color: "#e7d10bff" },
-    { name: "Python", emoji: "🐍", color: "#5cca60ff" },
-    { name: "React", emoji: "🌏️", color: "#74c9e8ff" },
+    { name: "HTML", level: "intermediate", color: "#ffa94d" },
+    { name: "CSS", level: "intermediate", color: "#e25df4ff" },
+    { name: "JavaScript", level: "intermediate", color: "#e7d10bff" },
+    { name: "Python", level: "advanced", color: "#5cca60ff" },
+    { name: "React", level: "beginner", color: "#74c9e8ff" },
   ];
+
   return (
     <ul className="skill-list">
       {skillList.map((skill) => {
         return (
-          <Skill
-            key={skill.name}
-            name={skill.name}
-            emoji={skill.emoji}
-            color={skill.color}
-          />
+          <Skill name={skill.name} level={skill.level} color={skill.color} />
         );
       })}
     </ul>
   );
 }
 
-function Skill({ name, emoji, color }) {
+function Skill({ name, level, color }) {
+  let emoji = "👶";
+  if (level === "intermediate") {
+    emoji = "👍️";
+  } else if (level === "advanced") {
+    emoji = "💪";
+  }
+
   return (
     <li className="skill" style={{ backgroundColor: color }}>
       {name} {emoji}
