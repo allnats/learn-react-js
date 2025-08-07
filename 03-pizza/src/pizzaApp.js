@@ -20,33 +20,30 @@ function Header() {
 
 function Menu() {
   return (
-    <div className="menu">
+    <main className="menu">
       <h2>Our menu</h2>
-      {pizzaData.map((pizza) => {
-        return (
-          <Pizza
-            name={pizza.name}
-            ingredients={pizza.ingredients}
-            price={pizza.price}
-            photoName={pizza.photoName}
-            soldOut={pizza.soldOut}
-          />
-        );
-      })}
-    </div>
+
+      {/* Render the elements in "pizzaData" as Pizza components. */}
+      <ul className="pizzas">
+        {pizzaData.map((pizza) => {
+          return <Pizza key={pizza.name} pizzaObj={pizza} />;
+        })}
+      </ul>
+    </main>
   );
 }
 
-function Pizza({ name, ingredients, price, photoName, soldOut }) {
+function Pizza({ pizzaObj }) {
+  const { name, ingredients, price, photoName, soldOut } = pizzaObj;
   return (
-    <div className="pizza">
+    <li className="pizza">
       <img src={photoName} alt={name} />
       <div>
         <h3>{name}</h3>
         <p>{ingredients}</p>
         <span>{price}</span>
       </div>
-    </div>
+    </li>
   );
 }
 
