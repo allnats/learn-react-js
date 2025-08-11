@@ -7,11 +7,23 @@ const initialItems = [
 ];
 
 function App() {
+  const [items, setItems] = useState(initialItems);
+
+  function handleAddItems(items) {
+    setItems((currentItems) => [...currentItems, items]);
+  }
+
+  function handleDeleteItem(itemId) {
+    setItems((currentItems) =>
+      currentItems.filter((item) => item.id !== itemId)
+    );
+  }
+
   return (
     <div className="app">
       <Logo />
-      <Form />
-      <PackingList listItems={initialItems} />
+      <Form onAddItems={handleAddItems} />
+      <PackingList itemList={items} onDeleteItem={handleDeleteItem} />
       <Stats />
     </div>
   );
@@ -20,23 +32,25 @@ function App() {
 function Logo() {
   return <h1>🏝️ Far Away 💼</h1>;
 }
-function Form() {
+function Form({ onAddItems }) {
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState(1);
 
-  function handleAddItem(e) {
+  function handleSubmit(e) {
     e.preventDefault();
 
     if (!description) return;
 
     const newItem = { description, quantity, packed: false, id: Date.now() };
-    // console.log(newItem);
+    // Add new item to existing item list.
+    onAddItems(newItem);
+    // Reset form fields.
     setDescription("");
     setQuantity(1);
   }
 
   return (
-    <form className="add-form" onSubmit={handleAddItem}>
+    <form className="add-form" onSubmit={handleSubmit}>
       <h3>What do you need for your 😍 trip?</h3>
       <select
         value={quantity}
@@ -59,26 +73,26 @@ function Form() {
   );
 }
 
-function PackingList({ listItems }) {
+function PackingList({ itemList, onDeleteItem }) {
   return (
     <div className="list">
       <ul>
-        {listItems.map((item) => {
-          return <Item item={item} key={item.id} />;
+        {itemList.map((item) => {
+          return <Item item={item} onDeleteItem={onDeleteItem} key={item.id} />;
         })}
       </ul>
     </div>
   );
 }
 
-function Item({ item }) {
+function Item({ item, onDeleteItem }) {
   return (
     <li>
       <input type="checkbox"></input>
       <p style={item.packed ? { textDecoration: "line-through" } : {}}>
         {item.quantity} {item.description}
       </p>
-      <button>❌</button>
+      <button onClick={() => onDeleteItem(item.id)}>❌</button>
     </li>
   );
 }
