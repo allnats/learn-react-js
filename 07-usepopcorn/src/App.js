@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Nav from "./Nav.js";
-import ListBox from "./ListBox.js";
+import { default as Nav, Search, Logo, MoviesFound } from "./Nav.js";
+import ListBox, { Main, MovieList, Movies } from "./ListBox.js";
 import { WatchedBox } from "./WatchedBox.js";
 
 export const tempMovieData = [
@@ -58,11 +58,17 @@ export default function App() {
 
   return (
     <>
-      <Nav movies={movies} />
-      <main className="main">
-        <ListBox movies={movies} />
+      <Nav>
+        <Search />
+        <MoviesFound movies={movies} />
+      </Nav>
+
+      <Main>
+        <ListBox>
+          <MovieList movies={movies} />
+        </ListBox>
         <WatchedBox />
-      </main>
+      </Main>
     </>
   );
 }

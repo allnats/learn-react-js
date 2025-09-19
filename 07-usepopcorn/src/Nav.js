@@ -1,11 +1,10 @@
 import { useState } from "react";
 
-const Nav = ({ movies }) => {
+const Nav = ({ children }) => {
   return (
     <nav className="nav-bar">
       <Logo />
-      <Search />
-      <MoviesFound movies={movies} />
+      {children}
     </nav>
   );
 };
@@ -42,3 +41,4 @@ const MoviesFound = ({ movies }) => {
 };
 
 export default Nav;
+export { Search, Logo, MoviesFound };
