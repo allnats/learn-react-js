@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { tempMovieData } from "./App";
 
 export default function ListBox({ children }) {
   const [isOpen1, setIsOpen1] = useState(true);
@@ -15,10 +14,6 @@ export default function ListBox({ children }) {
       {isOpen1 && children}
     </div>
   );
-}
-
-function Main({ children }) {
-  return <main className="main">{children}</main>;
 }
 
 function MovieList({ movies }) {
@@ -46,4 +41,4 @@ function Movies({ movie }) {
   );
 }
 
-export { Main, MovieList, Movies };
+export { MovieList, Movies };
