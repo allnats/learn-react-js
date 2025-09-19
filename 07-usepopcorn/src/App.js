@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Nav from "./Nav.js";
 import ListBox from "./ListBox.js";
 import { WatchedBox } from "./WatchedBox.js";
@@ -53,11 +54,13 @@ export const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
+  const [movies, setMovies] = useState(tempMovieData);
+
   return (
     <>
-      <Nav />
+      <Nav movies={movies} />
       <main className="main">
-        <ListBox />
+        <ListBox movies={movies} />
         <WatchedBox />
       </main>
     </>

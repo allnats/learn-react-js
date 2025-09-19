@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { tempMovieData } from "./App";
 
-export default function ListBox() {
-  const [movies, setMovies] = useState(tempMovieData);
+export default function ListBox({ movies }) {
   const [isOpen1, setIsOpen1] = useState(true);
 
   return (
@@ -13,14 +12,12 @@ export default function ListBox() {
       >
         {isOpen1 ? "–" : "+"}
       </button>
-      {isOpen1 && <MovieList />}
+      {isOpen1 && <MovieList movies={movies} />}
     </div>
   );
 }
 
-function MovieList() {
-  const [movies, setMovies] = useState(tempMovieData);
-
+function MovieList({ movies }) {
   return (
     <ul className="list">
       {movies?.map((movie) => (
