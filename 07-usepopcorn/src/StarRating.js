@@ -2,9 +2,14 @@ import { useState } from "react";
 
 export default function StarRating({ maxRating = 5 }) {
   const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
 
-  function handleRating(rating) {
-    setRating(rating);
+  function handleRating(newRating) {
+    setRating(newRating);
+  }
+
+  function handleHover(newHoverRating) {
+    setHoverRating(newHoverRating);
   }
 
   return (
@@ -13,19 +18,27 @@ export default function StarRating({ maxRating = 5 }) {
         {Array.from({ length: maxRating }, (_, i) => (
           <Star
             key={i}
-            isFilled={i + 1 <= rating}
+            isFilled={hoverRating ? i + 1 <= hoverRating : i + 1 <= rating}
             onRate={() => handleRating(i + 1)}
+            onHoverIn={() => handleHover(i + 1)}
+            onHoverOut={() => handleHover(0)}
           />
         ))}
       </div>
-      <p style={textStyle}>{rating || ""}</p>
+      <p style={textStyle}>{hoverRating || ""}</p>
     </article>
   );
 }
 
-function Star({ onRate, isFilled }) {
+function Star({ onRate, isFilled, onHoverIn, onHoverOut }) {
   return (
-    <span role="button" style={starStyle} onClick={onRate}>
+    <span
+      role="button"
+      style={starStyle}
+      onClick={onRate}
+      onMouseEnter={onHoverIn}
+      onMouseLeave={onHoverOut}
+    >
       {isFilled ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
