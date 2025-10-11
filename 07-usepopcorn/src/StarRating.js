@@ -7,12 +7,17 @@ export default function StarRating({
     className = "",
     messages = [],
     defaultRating = 0,
+    onSetRating,
 }) {
     const [rating, setRating] = useState(defaultRating);
     const [hoverRating, setHoverRating] = useState(0);
 
     function handleRating(newRating) {
         setRating(newRating);
+
+        if (onSetRating) {
+            onSetRating(newRating);
+        }
     }
 
     function handleHover(newHoverRating) {
