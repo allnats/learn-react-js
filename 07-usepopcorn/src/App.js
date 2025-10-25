@@ -47,12 +47,39 @@ export const tempWatchedData = [
     },
 ];
 
+const KEY = "30eba940";
+
 export const average = (arr) =>
     arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
-    const [movies, setMovies] = useState(tempMovieData);
-    const [watched, setWatched] = useState(tempWatchedData);
+    const [movies, setMovies] = useState([]);
+    const [watched, setWatched] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const query = "interstellar";
+
+    async function fetchMovieAPI() {
+        try {
+            setIsLoading(true);
+            const res = await fetch(
+                `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+            );
+
+            if (!res.ok)
+                throw new Error("Something went wrong with fetching movies");
+
+            const data = await res.json();
+            setMovies(data.Search);
+            setIsLoading(false);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
+        fetchMovieAPI();
+    }, []);
 
     return (
         <>
@@ -63,7 +90,7 @@ export default function App() {
 
             <Main>
                 <Box>
-                    <MovieList movies={movies} />
+                    {isLoading ? <Loader /> : <MovieList movies={movies} />}
                 </Box>
 
                 <Box>
@@ -73,4 +100,8 @@ export default function App() {
             </Main>
         </>
     );
+}
+
+function Loader() {
+    return <p className="loader">Loading...</p>;
 }
