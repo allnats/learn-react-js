@@ -53,13 +53,21 @@ export const average = (arr) =>
     arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
-    const [query, setQuery] = useState("");
+    const [query, setQuery] = useState("inception");
     const [movies, setMovies] = useState([]);
     const [watched, setWatched] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedId, setSelectedId] = useState(null);
+    // tt1375666
     const [error, setError] = useState("");
 
-    const tempQuery = "interstellar";
+    function handleSelectMovie(id) {
+        setSelectedId((selectedId) => (id === selectedId ? null : id));
+    }
+
+    function handleCloseMovie() {
+        setSelectedId(null);
+    }
 
     async function fetchMovieAPI() {
         try {
@@ -74,6 +82,8 @@ export default function App() {
 
             const data = await res.json();
             if (data.Response === "False") throw new Error("Movie not Found");
+
+            // console.log(data);
 
             setMovies(data.Search);
         } catch (err) {
@@ -103,13 +113,27 @@ export default function App() {
             <Main>
                 <Box>
                     {isLoading && <Loader />}
-                    {!isLoading && !error && <MovieList movies={movies} />}
+                    {!isLoading && !error && (
+                        <MovieList
+                            movies={movies}
+                            onSelectMovie={handleSelectMovie}
+                        />
+                    )}
                     {error && <ErrorMessage message={error} />}
                 </Box>
 
                 <Box>
-                    <WatchedSummary watched={watched} />
-                    <WatchedMovieList watched={watched} />
+                    {selectedId ? (
+                        <MovieDetails
+                            selectedId={selectedId}
+                            onCloseMovie={handleCloseMovie}
+                        />
+                    ) : (
+                        <>
+                            <WatchedSummary watched={watched} />
+                            <WatchedMovieList watched={watched} />
+                        </>
+                    )}
                 </Box>
             </Main>
         </>
@@ -122,4 +146,15 @@ function Loader() {
 
 function ErrorMessage({ message }) {
     return <p className="error">{message}</p>;
+}
+
+function MovieDetails({ selectedId, onCloseMovie }) {
+    return (
+        <div className="details">
+            <button className="btn-back" onClick={onCloseMovie}>
+                &larr;
+            </button>
+            {selectedId}
+        </div>
+    );
 }
