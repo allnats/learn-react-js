@@ -56,8 +56,9 @@ export default function App() {
     const [movies, setMovies] = useState([]);
     const [watched, setWatched] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
 
-    const query = "interstellar";
+    const query = "fdfae";
 
     async function fetchMovieAPI() {
         try {
@@ -70,10 +71,14 @@ export default function App() {
                 throw new Error("Something went wrong with fetching movies");
 
             const data = await res.json();
+            if (data.Response === "False") throw new Error("Movie not Found");
+
             setMovies(data.Search);
-            setIsLoading(false);
         } catch (err) {
             console.log(err);
+            setError(err.message);
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -90,7 +95,9 @@ export default function App() {
 
             <Main>
                 <Box>
-                    {isLoading ? <Loader /> : <MovieList movies={movies} />}
+                    {isLoading && <Loader />}
+                    {!isLoading && !error && <MovieList movies={movies} />}
+                    {error && <ErrorMessage message={error} />}
                 </Box>
 
                 <Box>
@@ -104,4 +111,8 @@ export default function App() {
 
 function Loader() {
     return <p className="loader">Loading...</p>;
+}
+
+function ErrorMessage({ message }) {
+    return <p className="error">{message}</p>;
 }
