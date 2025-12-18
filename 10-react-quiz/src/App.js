@@ -3,12 +3,14 @@ import Header from "./Header";
 import Loader from "./Loader";
 import Error from "./Error";
 import StartScreen from "./StartScreen";
+import Question from "./Question";
 import Main from "./Main";
 
 const initialState = {
   questions: [],
   // Possible app states: loading, error, ready, active, and finished.
   status: "loading",
+  index: 0,
 };
 
 // Main reducer function
@@ -19,6 +21,8 @@ function reducer(state, action) {
       return { ...state, questions: payload, status: "ready" };
     case "dataFetchError":
       return { ...state, status: "error" };
+    case "start":
+      return { ...state, status: "active", index: 0 };
     default:
       throw new Error("Invalid dispatch type");
   }
@@ -54,8 +58,12 @@ export default function App() {
         {status === "loading" && <Loader />}
         {status === "error" && <Error />}
         {status === "ready" && (
-          <StartScreen numberofQuestions={numberOfQuestions} />
+          <StartScreen
+            numberofQuestions={numberOfQuestions}
+            dispatch={dispatch}
+          />
         )}
+        {status === "active" && <Question />}
       </Main>
     </div>
   );
