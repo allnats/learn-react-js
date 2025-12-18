@@ -1,9 +1,12 @@
 import { useEffect, useReducer } from "react";
 import Header from "./Header";
+import Loader from "./Loader";
+import Error from "./Error";
+import StartScreen from "./StartScreen";
 import Main from "./Main";
 
 const initialState = {
-  question: [],
+  questions: [],
   // Possible app states: loading, error, ready, active, and finished.
   status: "loading",
 };
@@ -13,7 +16,7 @@ function reducer(state, action) {
   const { type, payload } = action;
   switch (type) {
     case "dataReceived":
-      return { ...state, question: payload, status: "ready" };
+      return { ...state, questions: payload, status: "ready" };
     case "dataFetchError":
       return { ...state, status: "error" };
     default:
@@ -23,6 +26,8 @@ function reducer(state, action) {
 
 export default function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { questions, status } = state;
+  const numberOfQuestions = questions.length;
 
   // Effect that fetches the questions from an API (json server).
   useEffect(function () {
@@ -46,7 +51,11 @@ export default function App() {
     <div className="app">
       <Header />
       <Main>
-        <p>Hello World</p>
+        {status === "loading" && <Loader />}
+        {status === "error" && <Error />}
+        {status === "ready" && (
+          <StartScreen numberofQuestions={numberOfQuestions} />
+        )}
       </Main>
     </div>
   );
