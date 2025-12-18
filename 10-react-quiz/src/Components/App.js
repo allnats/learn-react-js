@@ -4,6 +4,9 @@ import Loader from "./Loader";
 import Error from "./Error";
 import StartScreen from "./StartScreen";
 import Question from "./Question";
+import NextButton from "./NextButton";
+import Progress from "./Progress";
+import FinishScreen from "./FinishScreen";
 import Main from "./Main";
 
 const initialState = {
@@ -13,6 +16,7 @@ const initialState = {
   index: 0,
   userAnswer: null,
   points: 0,
+  highScore: 0,
 };
 
 // Main reducer function
@@ -35,6 +39,15 @@ function reducer(state, action) {
         points: isUserCorrect ? state.points + points : state.points,
       };
     }
+    case "nextQuestion":
+      return { ...state, index: state.index + 1, userAnswer: null };
+    case "setFinish": {
+      const highScore =
+        state.points > state.highScore ? state.points : state.highScore;
+      return { ...state, status: "finished", highScore };
+    }
+    case "restartQuiz":
+      return { ...initialState, questions: state.questions, status: "ready" };
     default:
       throw new Error("Invalid dispatch type");
   }
@@ -42,8 +55,12 @@ function reducer(state, action) {
 
 export default function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { questions, status, index, userAnswer } = state;
+  const { questions, status, index, userAnswer, points, highScore } = state;
   const numberOfQuestions = questions.length;
+  const maximumPoints = questions.reduce(
+    (accumulator, question) => accumulator + question.points,
+    0
+  );
 
   // Effect that fetches the questions from an API (json server).
   useEffect(function () {
@@ -71,14 +88,38 @@ export default function App() {
         {status === "error" && <Error />}
         {status === "ready" && (
           <StartScreen
-            numberofQuestions={numberOfQuestions}
+            numberOfQuestions={numberOfQuestions}
             dispatch={dispatch}
           />
         )}
         {status === "active" && (
-          <Question
-            question={questions.at(index)}
-            userAnswer={userAnswer}
+          <>
+            <Progress
+              index={index}
+              numberOfQuestions={numberOfQuestions}
+              points={points}
+              maximumPoints={maximumPoints}
+              userAnswer={userAnswer}
+            />
+            <Question
+              question={questions.at(index)}
+              userAnswer={userAnswer}
+              dispatch={dispatch}
+            />
+
+            <NextButton
+              dispatch={dispatch}
+              userAnswer={userAnswer}
+              index={index}
+              numberOfQuestions={numberOfQuestions}
+            />
+          </>
+        )}
+        {status === "finished" && (
+          <FinishScreen
+            points={points}
+            maximumPoints={maximumPoints}
+            highScore={highScore}
             dispatch={dispatch}
           />
         )}
