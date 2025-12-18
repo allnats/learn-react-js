@@ -7,7 +7,11 @@ import Question from "./Question";
 import NextButton from "./NextButton";
 import Progress from "./Progress";
 import FinishScreen from "./FinishScreen";
+import Footer from "./Footer";
 import Main from "./Main";
+import Timer from "./Timer";
+
+const SECS_PER_QUESTION = 30;
 
 const initialState = {
   questions: [],
@@ -17,6 +21,7 @@ const initialState = {
   userAnswer: null,
   points: 0,
   highScore: 0,
+  secondsRemaining: null,
 };
 
 // Main reducer function
@@ -28,7 +33,12 @@ function reducer(state, action) {
     case "dataFetchError":
       return { ...state, status: "error" };
     case "start":
-      return { ...state, status: "active", index: 0 };
+      return {
+        ...state,
+        status: "active",
+        index: 0,
+        secondsRemaining: state.questions.length * SECS_PER_QUESTION,
+      };
     case "setUserAnswer": {
       const question = state.questions.at(state.index);
       const { correctOption, points } = question;
@@ -40,7 +50,11 @@ function reducer(state, action) {
       };
     }
     case "nextQuestion":
-      return { ...state, index: state.index + 1, userAnswer: null };
+      return {
+        ...state,
+        index: state.index + 1,
+        userAnswer: null,
+      };
     case "setFinish": {
       const highScore =
         state.points > state.highScore ? state.points : state.highScore;
@@ -48,6 +62,12 @@ function reducer(state, action) {
     }
     case "restartQuiz":
       return { ...initialState, questions: state.questions, status: "ready" };
+    case "tickTimer":
+      return {
+        ...state,
+        secondsRemaining: state.secondsRemaining - 1,
+        status: state.secondsRemaining === 0 ? "finished" : state.status,
+      };
     default:
       throw new Error("Invalid dispatch type");
   }
@@ -55,7 +75,15 @@ function reducer(state, action) {
 
 export default function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { questions, status, index, userAnswer, points, highScore } = state;
+  const {
+    questions,
+    status,
+    index,
+    userAnswer,
+    points,
+    highScore,
+    secondsRemaining,
+  } = state;
   const numberOfQuestions = questions.length;
   const maximumPoints = questions.reduce(
     (accumulator, question) => accumulator + question.points,
@@ -106,13 +134,16 @@ export default function App() {
               userAnswer={userAnswer}
               dispatch={dispatch}
             />
+            <Footer>
+              <Timer dispatch={dispatch} secondsRemaining={secondsRemaining} />
 
-            <NextButton
-              dispatch={dispatch}
-              userAnswer={userAnswer}
-              index={index}
-              numberOfQuestions={numberOfQuestions}
-            />
+              <NextButton
+                dispatch={dispatch}
+                userAnswer={userAnswer}
+                index={index}
+                numberOfQuestions={numberOfQuestions}
+              />
+            </Footer>
           </>
         )}
         {status === "finished" && (
