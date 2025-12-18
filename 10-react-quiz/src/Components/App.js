@@ -11,6 +11,8 @@ const initialState = {
   // Possible app states: loading, error, ready, active, and finished.
   status: "loading",
   index: 0,
+  userAnswer: null,
+  points: 0,
 };
 
 // Main reducer function
@@ -23,6 +25,16 @@ function reducer(state, action) {
       return { ...state, status: "error" };
     case "start":
       return { ...state, status: "active", index: 0 };
+    case "setUserAnswer": {
+      const question = state.questions.at(state.index);
+      const { correctOption, points } = question;
+      const isUserCorrect = correctOption === payload;
+      return {
+        ...state,
+        userAnswer: payload,
+        points: isUserCorrect ? state.points + points : state.points,
+      };
+    }
     default:
       throw new Error("Invalid dispatch type");
   }
@@ -30,7 +42,7 @@ function reducer(state, action) {
 
 export default function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { questions, status } = state;
+  const { questions, status, index, userAnswer } = state;
   const numberOfQuestions = questions.length;
 
   // Effect that fetches the questions from an API (json server).
@@ -63,7 +75,13 @@ export default function App() {
             dispatch={dispatch}
           />
         )}
-        {status === "active" && <Question />}
+        {status === "active" && (
+          <Question
+            question={questions.at(index)}
+            userAnswer={userAnswer}
+            dispatch={dispatch}
+          />
+        )}
       </Main>
     </div>
   );
