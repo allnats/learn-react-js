@@ -1,5 +1,14 @@
+import { Link } from "react-router-dom";
+import PageNav from "../components/PageNav";
+
 function Homepage() {
-  return <div>WorldWise Homepage</div>;
+  return (
+    <div>
+      <PageNav />
+      <h1>WorldWise Homepage</h1>
+      <Link to="/pricing">Pricing</Link>
+    </div>
+  );
 }
 
 export default Homepage;
